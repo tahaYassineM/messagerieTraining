@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ConversationController extends Controller
 {
@@ -13,7 +14,8 @@ class ConversationController extends Controller
      */
     public function index()
     {
-        return view('conversations.index');
+        $users = \App\User::where('id', '!=', Auth::user()->id)->get();
+        return view('conversations.index', compact('users', $users));
     }
 
     /**

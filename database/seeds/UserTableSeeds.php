@@ -12,10 +12,10 @@ class UserTableSeeds extends Seeder
      */
     public function run()
     {
-        for( $i = 0; $i < 4; $i++)
+        for( $i = 0; $i < 10; $i++)
         {
             DB::table('users')->insert([
-                'name' => 'Taha Yassine',
+                'name' => "Taha Yassine $i",
                 'email' => "taha$i@taha.com",
                 'password' => bcrypt('tahataha')
             ]);

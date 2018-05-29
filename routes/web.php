@@ -19,4 +19,4 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::resource('conversations', 'ConversationController');
+Route::resource('conversations', 'ConversationController')->middleware('auth');

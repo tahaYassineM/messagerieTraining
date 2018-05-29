@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use App\User;
+
 class ConversationController extends Controller
 {
     /**
@@ -47,7 +49,9 @@ class ConversationController extends Controller
      */
     public function show($id)
     {
-        //
+        $users = User::where('id', '!=', Auth::user()->id)->get();
+        $user = User::find($id);
+        return view('conversations.show', compact('users', 'user' ));
     }
 
     /**

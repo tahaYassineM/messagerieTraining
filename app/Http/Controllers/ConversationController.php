@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Repository\ConversationRepository;
 use Illuminate\Auth\AuthManager;
+
 use App\User;
 
 class ConversationController extends Controller
@@ -46,9 +47,10 @@ class ConversationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(User $user, Request $request)
     {
-        //
+        $this->r->createMessage($request->content, $this->auth->user()->id, $user->id);
+        return redirect(route('conversations.show', ['user' => $user]));
     }
 
     /**
@@ -62,7 +64,8 @@ class ConversationController extends Controller
         $users = $this->r->getConversations($this->auth->user()->id);
         return view('conversations.show', [
                                             'users' => $users,
-                                            'user' => $user
+                                            'user' => $user,
+                                            'messages' => $this->r->getMessages($this->auth->user()->id, $user->id)->get()
                                         ]);
     }
 

@@ -4,11 +4,21 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use App\Repository\ConversationRepository;
+use Illuminate\Auth\AuthManager;
 use App\User;
 
 class ConversationController extends Controller
 {
+
+    private $r;
+    private $auth;
+
+    public function __construct(ConversationRepository $conversationRepository, AuthManager $auth)
+    {
+        $this->r = $conversationRepository;
+        $this->auth = $auth;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -16,8 +26,8 @@ class ConversationController extends Controller
      */
     public function index()
     {
-        $users = \App\User::where('id', '!=', Auth::user()->id)->get();
-        return view('conversations.index', compact('users', $users));
+        $users = $this->r->getConversations($this->auth->user()->id);
+        return view('conversations.index', compact('users'));
     }
 
     /**
@@ -47,11 +57,13 @@ class ConversationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)
     {
-        $users = User::where('id', '!=', Auth::user()->id)->get();
-        $user = User::find($id);
-        return view('conversations.show', compact('users', 'user' ));
+        $users = $this->r->getConversations($this->auth->user()->id);
+        return view('conversations.show', [
+                                            'users' => $users,
+                                            'user' => $user
+                                        ]);
     }
 
     /**

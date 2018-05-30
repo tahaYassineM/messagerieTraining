@@ -19,4 +19,6 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::resource('conversations', 'ConversationController')->middleware('auth');
+// Route::resource('conversations', 'ConversationController')->middleware('auth');
+Route::get('conversations', 'ConversationController@index')->name('conversations')->middleware('auth');
+Route::get('conversations/{user}', 'ConversationController@show')->name('conversations.show')->middleware('auth');

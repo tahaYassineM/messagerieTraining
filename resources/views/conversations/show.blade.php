@@ -20,8 +20,13 @@
                         <form action="" method="post">
                         {{ csrf_field() }}
                             <div class="form-group">
-                              <label for=""></label>
-                              <textarea class="form-control" name="content" rows="3" placeholder="votre message..."></textarea>
+                                <label for=""></label>
+                                <textarea class="form-control {{ $errors->has('content') ? 'is-invalid' : '' }}" name="content" rows="3" placeholder="votre message..."></textarea>
+                                @if($errors->has('content'))
+                                    <div class="invalid-feedback">
+                                        {{ implode(',', $errors->get('content')) }}
+                                    </div>
+                                @endif
                             </div>
                             <button type="submit" name="Envoyer" class="btn btn-primary">Envoyer</button>
                         </form>

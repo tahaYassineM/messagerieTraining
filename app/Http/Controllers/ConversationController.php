@@ -47,7 +47,7 @@ class ConversationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(User $user, Request $request)
+    public function store(User $user, \App\Http\Requests\MessageRequest $request)
     {
         $this->r->createMessage($request->content, $this->auth->user()->id, $user->id);
         return redirect(route('conversations.show', ['user' => $user]));

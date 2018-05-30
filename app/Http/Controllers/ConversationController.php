@@ -49,8 +49,10 @@ class ConversationController extends Controller
      */
     public function store(User $user, \App\Http\Requests\MessageRequest $request)
     {
-        $this->r->createMessage($request->content, $this->auth->user()->id, $user->id);
-        return redirect(route('conversations.show', ['user' => $user]));
+        $message = $this->r->createMessage($request->content, $this->auth->user()->id, $user->id);
+        $user->notify(new \App\Notifications\MessageRecieved($message));
+        return redirect(route('conversations.show', [
+                            'user' => $user]   ));
     }
 
     /**
@@ -62,10 +64,19 @@ class ConversationController extends Controller
     public function show(User $user)
     {
         $users = $this->r->getConversations($this->auth->user()->id);
+        $messages = $this->r->getMessages($this->auth->user()->id, $user->id)->paginate(2);
+        $unread = $this->r->unreadCount($this->auth->user()->id);
+        
+        if( isset($unread[$user->id])){
+            $this->r->readAll($user->id, $this->auth->user()->id);
+            unset($unread[$user->id]);
+        }
+
         return view('conversations.show', [
                                             'users' => $users,
                                             'user' => $user,
-                                            'messages' => $this->r->getMessages($this->auth->user()->id, $user->id)->get()
+                                            'messages' => $messages,
+                                            'unread' => $unread 
                                         ]);
     }
 
